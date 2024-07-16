@@ -1,0 +1,11 @@
+type Query {
+    getClients: [Client] @all(model: "App\\Models\\Auth\\Clients")
+    getClient(client_id: String @eq): Client @find(model: "App\\Models\\Auth\\Clients")
+}
+
+type Client {
+    client_id: String!
+    client_secret: String!
+    token: String
+    expire: String
+}

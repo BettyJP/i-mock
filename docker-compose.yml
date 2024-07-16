@@ -1,0 +1,41 @@
+version: '3'
+services:
+  i-mock-nginx:
+    container_name: "i-mock-nginx"
+    build:
+      context: ./docker/nginx
+    depends_on:
+      - i-mock-app
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/src
+
+  i-mock-app:
+    container_name: "i-mock-app"
+    build:
+      context: ./docker/php
+    depends_on:
+      - i-mock-mysql
+    volumes:
+      - ./:/src
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+
+  i-mock-mysql:
+    image: mysql:8.0.33
+    command: --max_allowed_packet=32505856
+    container_name: "i-mock-mysql"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=i-mock
+    ports:
+      - 3306:3306
+
+  i-mock-redis:
+    image: redis:alpine
+    container_name: "i-mock-redis"
+    ports:
+      - 16379:6379
